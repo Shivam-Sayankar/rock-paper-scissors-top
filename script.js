@@ -1,4 +1,3 @@
-// console.log("Hello World!")
 
 function getComputerChoice() {
     // const options = ["rock", "paper", "scissors"]
@@ -19,4 +18,11 @@ function getComputerChoice() {
     return computerChoice;
 }
 
-console.log(getComputerChoice())
+// console.log(getComputerChoice())
+
+function getHumanChoice() {
+    let humanChoice = prompt("Whats your choice? [rock, paper, scissors]: ")
+    console.log(humanChoice)
+}
+
+getHumanChoice()
