@@ -1,76 +1,114 @@
+const scoreBoard = document.querySelector('.score-board')
+const choiceDisplay = document.querySelector('.choice-display')
+const choiceResult = document.querySelector('.choice-result')
+
+const rockButton = document.querySelector('#rock')
+const paperButton = document.querySelector('#paper')
+const scissorsButton = document.querySelector('#scissors')
+const restartButton = document.querySelector('#restart-btn')
+const winTargetInput = document.querySelector('#win-target')
+const options = [rockButton, paperButton, scissorsButton]
+
+let userChoice = "";
+let computerChoice = "";
+let userScore = 0;
+let computerScore = 0;
+let winningTarget = 5;
+let gameWon = false;
+
+const winColor = "#6BCB77";
+const loseColor = "#FF6B6B";
+const tieColor = "#a682ff"
+
+scoreBoard.textContent = `Your score: ${userScore} | Computer score: ${computerScore}`
+
 
 function getComputerChoice() {
-    // const options = ["rock", "paper", "scissors"]
-    // const randomIndex = Math.floor(Math.random() * 3); // 0 1 2
-    // return options[randomIndex];
+    const options = ["rock", "paper", "scissors"]
+    const randomIndex = Math.floor(Math.random() * 3); // 0 1 2
+    return options[randomIndex];
+}
 
-    let computerChoice;
-    const randomChoice = Math.floor(Math.random() * 3);
 
-    if (randomChoice === 0) {
-        computerChoice = "rock";
-    } else if (randomChoice === 1) {
-        computerChoice = "paper";
-    } else { // if randomChoice === 2
-        computerChoice = "scissors";
+function displayChoices(userChoice, computerChoice) {
+    choiceDisplay.textContent = `You Chose: ${userChoice.toUpperCase()} | Computer chose: ${computerChoice.toUpperCase()}`
+}
+
+
+function updateScore(userChoice, computerChoice) {
+
+    if ((userChoice === "rock" && computerChoice === "scissors") ||
+        (userChoice === "paper" && computerChoice === "rock") ||
+        (userChoice === "scissors" && computerChoice === "paper")
+    ) {
+        userScore += 1;
+        choiceResult.textContent = `You Won! ${userChoice} beats ${computerChoice}.`;
+        choiceResult.setAttribute('style', `box-shadow: 0 0 40px ${winColor};`)
+
+    } else if (userChoice === computerChoice) {
+        choiceResult.textContent = `It's a tie!`;
+        choiceResult.setAttribute('style', `box-shadow: 0 0 40px ${tieColor}`)
+
+    } else {
+        computerScore += 1;
+        choiceResult.textContent = `You Lose! ${computerChoice} beats ${userChoice}.`;
+        choiceResult.setAttribute('style', `box-shadow: 0 0 40px ${loseColor};`)
     }
 
-    return computerChoice;
+    scoreBoard.textContent = `Your score: ${userScore} | Computer score: ${computerScore}`
 }
 
 
-function getHumanChoice() {
-    let humanChoice = prompt("Whats your choice? [rock, paper, scissors]: ")
-    return humanChoice;
+function displayWinner() {
+
+    if (userScore === winningTarget) {
+        choiceResult.textContent = "You Won The Game!"
+        choiceResult.setAttribute('style', `background-color: ${winColor}; color: #102e4a; box-shadow: 0 0 40px ${winColor}`)
+        gameWon = true;
+        restartButton.setAttribute('style', 'display: block;');
+
+    } else if (computerScore === winningTarget) {
+        choiceResult.textContent = "Computer Won The Game!"
+        choiceResult.setAttribute('style', `background-color: ${loseColor}; color: #102e4a; box-shadow: 0 0 40px ${loseColor}`)
+        gameWon = true;
+        restartButton.setAttribute('style', 'display: block;');
+    }
 }
 
 
-function playGame() {
+function playGame(userChoice, computerChoice) {
+    displayChoices(userChoice, computerChoice);
+    updateScore(userChoice, computerChoice);
+    displayWinner(userChoice, computerChoice);
+}
 
-    let humanScore = 0;
-    let computerScore = 0;
 
-    // find result for each round
-    function findResult(humanChoice, computerChoice) {
+options.forEach(choice => {
+    choice.addEventListener('click', (e) => {
+        userChoice = e.target.id;
+        computerChoice = getComputerChoice();
+        winningTarget = parseInt(winTargetInput.value);
 
-        let resultStatus;
-        if (humanScore > computerScore) {
-            resultStatus = `You Won! ${humanChoice} beats ${computerChoice}.`;
-        } else if (humanScore < computerScore) {
-            resultStatus = `You Lose! ${computerChoice} beats ${humanChoice}.`;
-        } else {
-            resultStatus = `It's a tie! Both, Computer and you chose ${humanChoice}.`;
+        if ((userScore < winningTarget || computerScore < winningTarget) && !gameWon) {
+            playGame(userChoice, computerChoice);
         }
 
-        return resultStatus;
-    }
+    });
+});
 
 
-    function playRound(humanChoice, computerChoice) {
-        humanChoice = humanChoice.toLowerCase();
+restartButton.addEventListener('click', () => {
+    userScore = 0;
+    computerScore = 0;
+    userChoice = "";
+    computerChoice = "";
+    gameWon = false
+    winTargetInput.value = 5;
+    winningTarget = 5;
 
-        if ((humanChoice === "rock" && computerChoice === "scissors") ||
-            (humanChoice === "paper" && computerChoice === "rock") ||
-            (humanChoice === "scissors" && computerChoice === "paper")
-        ) {
-            humanScore += 1;
-        } else if (humanChoice === computerChoice) {
-            console.log("You and the Computer chose the same thing!")
-        } else {
-            computerScore += 1;
-        }
-    }
-
-
-    const rounds = 5;
-    for (let i = 0; i < rounds; i++) {
-        let humanChoice = getHumanChoice();
-        let computerChoice = getComputerChoice();
-        playRound(humanChoice, computerChoice);
-
-        let roundStatus = findResult(humanChoice, computerChoice);
-        console.log(roundStatus)
-    }
-}
-
-playGame();
+    scoreBoard.textContent = `Your score: ${userScore} | Computer score: ${computerScore}`
+    choiceResult.textContent = "Well, Nothing Beats Nothing :P"
+    choiceDisplay.textContent = `You Chose Nothing yet`
+    choiceResult.setAttribute('style', `box-shadow: none;`)
+    restartButton.setAttribute('style', 'display: none;')
+})
