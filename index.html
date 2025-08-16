@@ -4,8 +4,44 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Rock Paper Scissors - TOP</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Jua&family=Kosugi+Maru&display=swap" rel="stylesheet">
 </head>
 <body>
+    <div class="main-container">
+
+        <div class="header">
+            Rock Paper Scissors!
+        </div>
+
+        <div class="win-score-container">
+            <div class="score-board"></div>
+            <div class="win-target-div">
+                <label for="win-target" id="win-target-label">Win at:</label>
+                <input type="number" name="win-target" id="win-target" value="5">
+            </div>
+            <button id="restart-btn">Restart</button>
+        </div>
+
+        <div class="options-container">
+            <div class="sub-heading">
+                Pick Your Choice
+            </div>
+            <div class="options">
+                <button class="choice" id="rock"></button>
+                <button class="choice" id="paper"></button>
+                <button class="choice" id="scissors"></button>
+            </div>
+            <div class="choice-display">
+                You Chose: Nothing yet
+            </div>
+            <div class="choice-result">
+                Well, Nothing Beats Nothing :P
+            </div>
+        </div>
+    </div>
     <script src="script.js"></script>
 </body>
 </html>
